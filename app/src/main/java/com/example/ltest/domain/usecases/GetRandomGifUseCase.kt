@@ -6,8 +6,8 @@ import com.example.ltest.domain.repo.GifsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetRandomGif @Inject constructor(
+class GetRandomGifUseCase @Inject constructor(
         private val albumsRepository: GifsRepository,
 ) {
-    operator fun invoke(): Flow<Resource<Gif>> = albumsRepository.getAll()
+    operator fun invoke(): Flow<Resource<Gif>> = albumsRepository.getRandom()
 }

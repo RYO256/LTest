@@ -18,7 +18,7 @@ class GifsRepositoryImpl @Inject constructor(
         private val networkDataSource: NetworkDataSource,
 ) : GifsRepository {
 
-    override fun getAll(): Flow<Resource<Gif>> =
+    override fun getRandom(): Flow<Resource<Gif>> =
             flow {
                 networkDataSource.getRandomGif().collect {
                     when (it) {

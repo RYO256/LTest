@@ -5,5 +5,5 @@ import com.example.ltest.domain.models.Gif
 import kotlinx.coroutines.flow.Flow
 
 interface GifsRepository {
-    fun getAll(): Flow<Resource<Gif>>
+    fun getRandom(): Flow<Resource<Gif>>
 }

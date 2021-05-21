@@ -3,7 +3,7 @@ package com.example.ltest.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.example.ltest.domain.usecases.GetRandomGif
+import com.example.ltest.domain.usecases.GetRandomGifUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -11,12 +11,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-        private val getAlbumsUseCase: GetRandomGif,
+        private val getRandomGifUseCase: GetRandomGifUseCase,
 ) : ViewModel() {
 
-    fun getAlbums() =
+    fun getRandomGif() =
             liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-                getAlbumsUseCase.invoke().collect {
+                getRandomGifUseCase.invoke().collect {
                     emit(it)
                 }
             }

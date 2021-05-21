@@ -27,7 +27,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val binding = MainFragmentBinding.bind(view)
 
-        viewModel.getAlbums().observe(viewLifecycleOwner, { result ->
+        viewModel.getRandomGif().observe(viewLifecycleOwner, { result ->
             when (result) {
                 is Resource.Loading -> {
                 }
