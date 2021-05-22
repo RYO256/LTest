@@ -3,6 +3,7 @@ package com.example.ltest.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.example.ltest.domain.usecases.GetPagedSearchResultsuseCase
 import com.example.ltest.domain.usecases.GetRandomGifUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
         private val getRandomGifUseCase: GetRandomGifUseCase,
+        private val getPagedSearchResultsuseCase: GetPagedSearchResultsuseCase
 ) : ViewModel() {
 
     fun getRandomGif() =
@@ -20,5 +22,7 @@ class MainViewModel @Inject constructor(
                     emit(it)
                 }
             }
+
+    fun getGifSearchResults(query: String) = getPagedSearchResultsuseCase.invoke(query)
 
 }

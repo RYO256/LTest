@@ -7,11 +7,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ltest.R
 import com.example.ltest.core.Resource
 import com.example.ltest.databinding.MainFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -42,6 +47,26 @@ class MainFragment : Fragment() {
                 }
             }
         })
+
+
+        val gifPagedListAdapter = GifPagedListAdapter(requireContext()) {
+            Glide.with(view.context)
+                    .load(it.url)
+                    .centerCrop()
+                    .into(binding.randomGif)
+        }
+        gifPagedListAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
+        val columns = 4
+        binding.gifsRecycler.layoutManager = GridLayoutManager(requireContext(), columns)
+        binding.gifsRecycler.adapter = gifPagedListAdapter
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.getGifSearchResults("minions").collectLatest {
+                gifPagedListAdapter.submitData(it)
+            }
+        }
+
     }
 
 }

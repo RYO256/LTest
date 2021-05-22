@@ -10,7 +10,5 @@ data class GiphyItemDto(
         val meta: Meta?
 ): Parcelable
 
-fun GiphyItemDto.toGif(): Gif = Gif(
-        this.data?.images?.preview_gif?.url ?: "",
-        this.data?.images?.fixed_height?.url ?: "")
+
 

@@ -1,3 +1,7 @@
 package com.example.ltest.domain.models
 
-data class Gif(val url : String , val preview : String )
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Gif(val url: String, val preview: String) : Parcelable
