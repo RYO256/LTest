@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LTest</string>
+    <string name="sorry_no_results">Sorry, no results !</string>
 </resources>

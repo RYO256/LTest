@@ -1,5 +1,6 @@
 package com.example.ltest.data
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.ltest.data.dto.GifSearchResponseDto
@@ -18,20 +19,21 @@ class GifsPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Gif> =
             try {
-                val pageNumber = params.key ?: 1
+                val pageNumber = params.key ?: 0
                 val response = service.getGifs(
                         query,
                         PAGE_SIZE,
                         pageNumber
                 )
-                val previousKey = if (pageNumber > 1) {
+                val previousKey = if (pageNumber > 0) {
                     pageNumber - 1
                 } else {
                     null
                 }
 
-                val nextKey = response.pagination?.offset?.plus(1)
-
+                val nextKey = if ((response.pagination?.offset
+                                ?: 0) * PAGE_SIZE < response.pagination?.totalCount ?: 0) response.pagination?.offset?.plus(1) else null
+                Log.d("GifsPagingSource", "GifsPagingSource nextKey $nextKey")
                 LoadResult.Page(
                         data = extractResult(response),
                         prevKey = previousKey,

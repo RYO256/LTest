@@ -1,14 +1,18 @@
 package com.example.ltest.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState.NotLoading
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -57,16 +61,38 @@ class MainFragment : Fragment() {
         }
         gifPagedListAdapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
+        gifPagedListAdapter.addLoadStateListener { loadState ->
+            if (loadState.refresh is NotLoading) {
+                binding.noResultsText.isVisible = gifPagedListAdapter.itemCount == 0
+            }
+        }
+
         val columns = 4
         binding.gifsRecycler.layoutManager = GridLayoutManager(requireContext(), columns)
         binding.gifsRecycler.adapter = gifPagedListAdapter
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.getGifSearchResults("minions").collectLatest {
-                gifPagedListAdapter.submitData(it)
-            }
-        }
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+                android.widget.SearchView.OnQueryTextListener {
 
+            override fun onQueryTextChange(qString: String): Boolean {
+                return true
+            }
+
+            override fun onQueryTextSubmit(qString: String): Boolean {
+                hideKeyboard()
+                lifecycleScope.launchWhenStarted {
+                    viewModel.getGifSearchResults(qString).collectLatest {
+                        gifPagedListAdapter.submitData(it)
+                    }
+                }
+                return true
+            }
+        })
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
 }
