@@ -38,7 +38,7 @@ class GetRandomGifUseCaseTest {
     }
 
     @Test
-    fun getArticlesTest() = runBlockingTest {
+    fun getRandomGifTestTest() = runBlockingTest {
         val randomGifMock = Mockito.mock(Gif::class.java)
         Mockito.`when`(gifsRepository.getRandom()).thenReturn(flow { Resource.Success(randomGifMock) })
         testScope.launch {
